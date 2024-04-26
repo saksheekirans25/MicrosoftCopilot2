@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Trattoria Bella - Italian Restaurant</title>
+   
+</head>
+    <style>
+   /* styles.css */
+
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Header styles */
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+/* Search bar styles */
+#search {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Menu section styles */
+#menu {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-price {
+    color: #555;
+}
+
+.add-to-cart {
+    background-color: #ff6347;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Cart section styles */
+#cart {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#checkout {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Fancy fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+    </style>
+<body>
+    <header>
+        <h1>La Trattoria Bella</h1>
+        <label for="myInput">Search for menu items:</label>
+<input type="text" id="myInput" placeholder="Search for menu items...">
+    </header>
+    <section id="menu">
+        <!-- Menu items -->
+        <div class="menu-item">
+            <span class="item-name">Spaghetti Carbonara</span>
+            <span class="item-price">$12.99</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <!-- Add more menu items -->
+        <div class="menu-item">
+            <span class="item-name">Margherita Pizza</span>
+            <span class="item-price">$10.99</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span class="item-name">Chicken Alfredo</span>
+            <span class="item-price">$14.99</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span class="item-name">Lasagna Bolognese</span>
+            <span class="item-price">$12.49</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span class="item-name">Tiramisu</span>
+            <span class="item-price">$6.99</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span class="item-name">Caprese Salad</span>
+            <span class="item-price">$8.49</span>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <!-- Add more menu items if needed -->
+    </section>
+   <section id="cart">
+        <h2>Cart</h2> <!-- Added "Cart" label -->
+        <!-- Cart items -->
+        <!-- ... (other cart items) ... -->
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="total-price">$0.00</span>
+        </div>
+        <button id="checkout">Checkout</button>
+    </section>
+    
+</body>
+    <script>
+// script.js
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+const totalPriceElement = document.getElementById('total-price');
+const checkoutButton = document.getElementById('checkout');
+const cartItemsContainer = document.getElementById('cart-items'); // Added cart items container
+
+let totalPrice = 0;
+const cartItems = []; // Array to store selected items
+
+        // script.js
+function filterMenu() {
+    const input = document.getElementById('myInput');
+    const filter = input.value.toUpperCase();
+    const ul = document.getElementById('myUL');
+    const li = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        const a = li[i].getElementsByTagName('a')[0];
+        const txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = '';
+        } else {
+            li[i].style.display = 'none';
+        }
+    }
+}
+
+addToCartButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const menuItem = button.parentElement;
+        const itemName = menuItem.querySelector('.item-name').textContent;
+        const itemPrice = parseFloat(menuItem.querySelector('.item-price').textContent.slice(1));
+
+        // Add item to cart
+        cartItems.push({ name: itemName, price: itemPrice });
+
+        // Update the cart display
+        updateCartDisplay();
+    });
+});
+
+function updateCartDisplay() {
+    let cartHTML = '';
+    totalPrice = 0;
+
+    cartItems.forEach((item) => {
+        cartHTML += `
+            <div class="cart-item">
+                <span class="item-name">${item.name}</span>
+                <span class="item-price">$${item.price.toFixed(2)}</span>
+            </div>
+        `;
+        totalPrice += item.price;
+    });
+
+    totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
+    cartItemsContainer.innerHTML = cartHTML; // Update the cart container
+}
+
+checkoutButton.addEventListener('click', () => {
+    // Display a thank-you message and show the total price
+    alert(`Thank you for your order! Total: $${totalPrice.toFixed(2)}`);
+});
+       
+
+
+
+    </script>
+</html>
